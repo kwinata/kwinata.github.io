@@ -1,15 +1,31 @@
 <!DOCTYPE HTML>
 <html>
 <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
   <title>CR table generator</title>
   <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
   <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+  <style>
+    body {
+      background-color: #F0FFF8;
+    }
+    #myColumn {
+      padding-top: 100px;
+    }
+    .column {
+      max-width: 90% ;
+    }
+  
+</style>
 </head>
 <body>
 
-<div class="ui middle aligned center aligned grid">
-  <div class="column">
+<div class="ui center aligned middle aligned grid">
+  <div id="myColumn" class="column">
     <h2 class="ui teal header">
       <div class="content">
         CR Table Generator
@@ -83,7 +99,7 @@
 
     </form>
 
-    <table class="ui celled table" id="crTable">
+    <table class="ui celled table unstackable" id="crTable">
       <thead>
         <tr><th>Day</th>
         <th>Praying</th>
@@ -107,24 +123,8 @@
   </div>
 </div>
 
-
 </body>
-<style>
 
-    body {
-      background-color: #DADADA;
-    }
-    body > .grid {
-      height: 100%;
-    }
-    .image {
-      margin-top: -100px;
-    }
-    .column {
-      max-width: 500px ;
-    }
-  
-</style>
 <script>
 $('.ui.dropdown')
   .dropdown()
@@ -206,7 +206,7 @@ $('.ui.submit').click(function(){
   }
     
 })
-
 </script>
-</html>
 
+</html>
+ 
