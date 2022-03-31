@@ -1,0 +1,212 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>CR table generator</title>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+</head>
+<body>
+
+<div class="ui middle aligned center aligned grid">
+  <div class="column">
+    <h2 class="ui teal header">
+      <div class="content">
+        CR Table Generator
+      </div>
+    </h2>
+    <form class="ui large form">
+      <div class="ui stacked segment left aligned">
+
+        <div class="field">
+          <div class="field">
+            <label>Names</label>
+            <textarea name="names" placeholder="Enter comma seperated names"></textarea>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Start day</label>
+          <div class="ui selection dropdown">
+            <input type="hidden" name="start day" value="3">
+            <i class="dropdown icon"></i>
+            <div class="default text">Start day</div>
+            <div class="menu">
+              <div class="item" data-value="0">Sun</div>
+              <div class="item" data-value="1">Mon</div>
+              <div class="item" data-value="2">Tue</div>
+              <div class="item" data-value="3">Wed</div>
+              <div class="item" data-value="4">Thu</div>
+              <div class="item" data-value="5">Fri</div>
+              <div class="item" data-value="6">Sat</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Until day</label>
+          <div class="ui selection dropdown">
+            <input type="hidden" name="until day" value="2">
+            <i class="dropdown icon"></i>
+            <div class="default text">Until day</div>
+            <div class="menu">
+              <div class="item" data-value="0">Sun</div>
+              <div class="item" data-value="1">Mon</div>
+              <div class="item" data-value="2">Tue</div>
+              <div class="item" data-value="3">Wed</div>
+              <div class="item" data-value="4">Thu</div>
+              <div class="item" data-value="5">Fri</div>
+              <div class="item" data-value="6">Sat</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="inline field">
+          <div class="ui toggle checkbox">
+            <input type="checkbox" tabindex="0" class="hidden" name="extra week">
+            <label>More than one week?</label>
+          </div>
+        </div>
+
+        <div class="inline field">
+          <div class="ui toggle checkbox">
+            <input type="checkbox" tabindex="0" class="hidden" checked name="randomized">
+            <label>Randomize Order?</label>
+          </div>
+        </div>
+
+
+        <div class="ui fluid large teal submit button">Create!</div>
+
+        <div class="ui error message"></div>
+      </div>
+
+    </form>
+
+    <table class="ui celled table" id="crTable">
+      <thead>
+        <tr><th>Day</th>
+        <th>Praying</th>
+        <th>Prayed for</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td>Example</td>
+          <td>Example</td>
+          <td>Example</td>
+        </tr>
+      </tbody>
+    </table>
+
+
+
+    <div class="ui message">
+      Made with ❤️️ by <a href="https://blogs.ntu.edu.sg/sao-lom/">Legion of Mary @ NTU</a>
+    </div>
+
+  </div>
+</div>
+
+
+</body>
+<style>
+
+    body {
+      background-color: #DADADA;
+    }
+    body > .grid {
+      height: 100%;
+    }
+    .image {
+      margin-top: -100px;
+    }
+    .column {
+      max-width: 500px ;
+    }
+  
+</style>
+<script>
+$('.ui.dropdown')
+  .dropdown()
+;
+$('.ui.checkbox')
+  .checkbox()
+;
+
+function shuffleArray(array) {
+  for (var i = array.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+}
+
+$('.ui.submit').click(function(){
+  const names = $('textarea').val().split(",");
+  const start = parseInt($('input[name="start day"]').val());
+  const until = parseInt($('input[name="until day"]').val());
+  const extra = $('input[name="extra week"]').is(':checked');
+  const randomized = $('input[name="randomized"]').is(':checked');
+  const dayMap = {
+    0: "Sunday",
+    1: "Monday",
+    2: "Tuesday",
+    3: "Wednesday",
+    4: "Thursday",
+    5: "Friday",
+    6: "Saturday",
+  }
+
+  if (randomized) {
+    shuffleArray(names);
+  }
+
+  // clear table
+  $("#crTable").find("tr:gt(0)").remove();
+
+  var day = start;
+  var is_ok = (start === until) + extra;
+  var days = [];
+
+  // generate days needed
+  var protectLoop = 0;
+  while (is_ok >= 0) {
+    days.push(dayMap[day]);
+    dayMap[day] = "Next " + dayMap[day];
+
+    if (day === until) {
+      is_ok--;
+    }
+
+    day++;
+    day %= 7;
+
+    if(protectLoop++ > 300) {
+      break;
+    }
+  }
+
+  // repeat days if there's more people
+  var rollingIdx = 0;
+  while (days.length < names.length) {
+    days.push(days[rollingIdx]);
+    rollingIdx += 1
+  }
+
+  var nameIdx = 0;
+  for (var dayIdx = 0; dayIdx < days.length; dayIdx++) {
+    praying = names[nameIdx].trim();
+    prayed = names[(nameIdx+1) % names.length].trim();
+
+    nameIdx++;
+    nameIdx %= names.length;
+
+    $('#crTable tr:last').after(`<tr><td>${days[dayIdx]}</td><td>${praying}</td><td>${prayed}</td></tr>`);
+  }
+    
+})
+
+</script>
+</html>
+
