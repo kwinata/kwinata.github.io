@@ -35,10 +35,8 @@
       <div class="ui stacked segment left aligned">
 
         <div class="field">
-          <div class="field">
-            <label>Names</label>
-            <textarea name="names" placeholder="Enter comma seperated names"></textarea>
-          </div>
+          <label>Names</label>
+          <textarea name="names" placeholder="Enter comma seperated names"></textarea>
         </div>
 
         <div class="field">
@@ -117,7 +115,7 @@
 
 
     <div class="ui message">
-      Made with ❤️️ by <a href="https://blogs.ntu.edu.sg/sao-lom/">Legion of Mary @ NTU</a>
+      Created by and for <a href="https://blogs.ntu.edu.sg/sao-lom/">Legion of Mary @ NTU 🙏</a>
     </div>
 
   </div>
@@ -143,7 +141,7 @@ function shuffleArray(array) {
 }
 
 $('.ui.submit').click(function(){
-  const names = $('textarea').val().split(",");
+  const names = $('textarea[name="names"]').val().split(",");
   const start = parseInt($('input[name="start day"]').val());
   const until = parseInt($('input[name="until day"]').val());
   const extra = $('input[name="extra week"]').is(':checked');
