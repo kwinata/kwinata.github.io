@@ -18,6 +18,10 @@
 			padding-top: 100px;
 		}
 
+		#image_placeholder {
+			padding: 3%;
+		}
+
 		.column {
 			max-width: 90%;
 		}
@@ -72,7 +76,10 @@
 					<div class="ui fluid large basic green submit button">Generate image</div>
 				</div>
 
-				<br/>
+				<div>
+					<img id="image_placeholder" class="ui fluid image" src="https://semantic-ui.com/images/wireframe/image.png" alt="generated-image">
+				</div>
+
 
 				<div id="publish_button">
 					<div class="ui fluid large disabled green submit button">Publish!</div>
@@ -92,9 +99,59 @@
 </body>
 
 <script>
+	const prod = false;
 
 	function enablePublishButton() {
 		$('#publish_button > .disabled').removeClass('disabled');
+	}
+
+	function createImage(shortText, password) {
+		function handleSuccess(response) {
+			$('#image_placeholder').attr('src', response.download_url_png);
+		}
+		function handleError(error) {
+
+		}
+		const formData = {
+			"overrides": [
+				{
+					"name": "text_1",
+					"text": shortText
+				},
+				{
+					"name": "rect-image_1",
+					"src": "https://source.unsplash.com/1080x1080/?nature"
+				}
+			]
+		}
+		if (prod) {
+			$.ajax({
+				url: 'https://rest.apitemplate.io/v2/create-image?template_id=54a77b2b2d6caeb6',
+				type: 'POST',
+				data: JSON.stringify(formData),
+				headers: {
+					"X-API-KEY": "SECRET"
+				},
+				contentType: 'application/json',
+				success: function (response) {
+					handleSuccess(response)
+				},
+				error: function (error) {
+					console.log(error)
+				}
+			});
+		} else {
+			$.ajax({
+				url: ' https://api.jsonbin.it/bins/VsfoVjuR',
+				type: 'GET',
+				success: function (response) {
+					handleSuccess(response)
+				},
+				error: function (error) {
+					handleError(error)
+				}
+			})
+		}
 	}
 
 	$('#generate_button > .ui.submit').click(function () {
@@ -104,7 +161,7 @@
 		const spiritualReading = $('input[name="spiritual_reading"]').val();
 		const password = $('input[name="password"]').val();
 
-
+		createImage(shortText, password)
 		enablePublishButton()
 
 	})
